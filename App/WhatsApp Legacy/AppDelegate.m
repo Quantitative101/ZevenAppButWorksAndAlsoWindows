@@ -83,12 +83,10 @@
         
     } else if ([[NSUserDefaults standardUserDefaults] stringForKey:@"setupStage1"] != nil){
         self.setupViewController = [[SetupViewController alloc] initWithNibName:@"SetupViewController" bundle:nil];
-        [self.setupViewController.view setFrame: [[UIScreen mainScreen] applicationFrame]];
-        [self.window addSubview: self.setupViewController.view];
+        self.window.rootViewController = self.setupViewController;
     } else {
         self.welcomeViewController = [[WelcomeViewController alloc] initWithNibName:@"WelcomeViewController" bundle:nil];
-        [self.welcomeViewController.view setFrame: [[UIScreen mainScreen] applicationFrame]];
-        [self.window addSubview: self.welcomeViewController.view];
+        self.window.rootViewController = self.welcomeViewController;
     }
     [[self tabBarController]setDelegate:self];
     [self.window makeKeyAndVisible];

@@ -605,18 +605,19 @@ app.post("/readChat/:contactId", async (req, res) => {
     console.log("Contact:", rawId, "isGroup:", req.query.isGroup);
     console.log("Built ID:", contactId);
 
-    const chat = await client.getChatById(contactId);
-    console.log("Unread count:", chat.unreadCount);
+    try {
+      const chat = await client.getChatById(contactId);
+      console.log("Unread count:", chat.unreadCount);
 
-    if (chat.unreadCount > 0) {
-      await chat.sendSeen();
-      console.log("Marked as seen!");
-    } else {
-      console.log("No unread messages.");
-    }
+      if (chat.unreadCount > 0) {
+        await chat.sendSeen();
+        console.log("Marked as seen!");
+      } else {
+        console.log("No unread messages.");
+      }
+    } catch(err) {}
 
     await client.resetState();
-
     res.status(200).json({ response: "ok" });
   } catch (error) {
     console.error("Error in readChat:", error);
