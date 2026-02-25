@@ -51,6 +51,8 @@
 	</array>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Required for sending voice messages</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Required for viewing and sending images</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

@@ -232,11 +232,7 @@ setUpChatGetters(app, client);
 
 app.post("/setTypingStatus/:contactId", async (req, res) => {
   try {
-    const contactId = utils.buildContactId(
-      req.params.contactId,
-      req.query.isGroup === "1",
-    );
-    const chat = await client.getChatById(contactId);
+    const chat = await client.getChatById(req.params.contactId);
 
     if (req.query.isVoiceNote === "1") {
       await chat.sendStateRecording();
@@ -250,18 +246,19 @@ app.post("/setTypingStatus/:contactId", async (req, res) => {
   }
 });
 
-app.post("/clearState/:contactId", async (req, res) => {
-  try {
-    const contactId = utils.buildContactId(
-      req.params.contactId,
-      req.query.isGroup === "1",
-    );
-    const chat = await client.getChatById(contactId);
-    await chat.clearState();
-    res.status(200);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
+app.post("/clearState/:contactId", (req, res) => {
+  const { contactId } = req.params;
+  res.sendStatus(202);
+
+  (async () => {
+    try {
+      const chat = await client.getChatById(contactId);
+      await chat.clearState();
+      console.log(`State cleared for ${contactId}`);
+    } catch (error) {
+      console.error(`Failed to clear state for ${contactId}:`, error);
+    }
+  })();
 });
 
 app.post("/seenBroadcast/:messageId", async (req, res) => {
@@ -450,9 +447,7 @@ app.get("/getVideoThumbnail/:mediaId", async (req, res) => {
 
 app.post("/sendMessage/:contactId", async (req, res) => {
   try {
-    const isGroup = req.query.isGroup === "1";
-    const contactId = utils.buildContactId(req.params.contactId, isGroup);
-    const chat = await client.getChatById(contactId);
+    const chat = await client.getChatById(req.params.contactId);
 
     // Send text message (optionally as reply)
     if (req.body.messageText) {
@@ -576,11 +571,7 @@ app.post("/sendMessage/:contactId", async (req, res) => {
 
 app.post("/setBlock/:contactId", async (req, res) => {
   try {
-    const contactId = utils.buildContactId(
-      req.params.contactId,
-      req.query.isGroup === "1",
-    );
-    const contact = await client.getContactById(contactId);
+    const contact = await client.getContactById(req.params.contactId);
 
     if (contact.isBlocked) {
       await contact.unblock();
@@ -598,12 +589,8 @@ app.post("/setBlock/:contactId", async (req, res) => {
 
 app.post("/readChat/:contactId", async (req, res) => {
   try {
-    const isGroup = req.query.isGroup === "1";
-    const rawId = req.params.contactId;
-    const contactId = utils.buildContactId(rawId, isGroup);
-
-    console.log("Contact:", rawId, "isGroup:", req.query.isGroup);
-    console.log("Built ID:", contactId);
+    const { contactId } = req.params;
+    console.log("Contact:", contactId);
 
     const chat = await client.getChatById(contactId);
     console.log("Unread count:", chat.unreadCount);

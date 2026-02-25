@@ -164,7 +164,7 @@
                                         @"vC.I)Xsfe(;p4YB6E5@y", @"token",
                                         nil];
             
-            NSString *jsonString = [JSONUtility JSONStringIfy:dictionary];
+            NSString *jsonString = [JSONUtility JSONStringify:dictionary];
             [self.chatSocket sendMessage:jsonString];
         } else {
             [_chatSocket disconnect];

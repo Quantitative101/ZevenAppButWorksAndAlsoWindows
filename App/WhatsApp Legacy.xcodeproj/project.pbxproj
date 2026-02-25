@@ -272,7 +272,6 @@
 		C5B796932CB36F9D002414D5 /* kinormalPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5B7968B2CB36F9D002414D5 /* kinormalPressed@2x.png */; };
 		C5B9A5F52C987A2700B9586E /* metaai.png in Resources */ = {isa = PBXBuildFile; fileRef = C5B9A5F32C987A2700B9586E /* metaai.png */; };
 		C5B9A5F62C987A2700B9586E /* metaai@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5B9A5F42C987A2700B9586E /* metaai@2x.png */; };
-		C5BD18F72C5545B900A8F7ED /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BD18F62C5545B900A8F7ED /* JSONKit.m */; };
 		C5BD4AB52CA99E7600184E28 /* replyback.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BD4AB32CA99E7600184E28 /* replyback.png */; };
 		C5BD4AB62CA99E7600184E28 /* replyback@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BD4AB42CA99E7600184E28 /* replyback@2x.png */; };
 		C5C074172C9DC964003113CC /* ScrubberBar.png in Resources */ = {isa = PBXBuildFile; fileRef = C5C074152C9DC964003113CC /* ScrubberBar.png */; };
@@ -348,6 +347,7 @@
 		C5FACFF72CCFAACD00804003 /* JSMessageAttachView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FACFF62CCFAACD00804003 /* JSMessageAttachView.m */; };
 		F3B9FE982F4CFDF100E1404C /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3B9FE972F4CFDE400E1404C /* libwebp.a */; };
 		F3B9FE9A2F4CFE2B00E1404C /* libsharpyuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3B9FE992F4CFE2500E1404C /* libsharpyuv.a */; };
+		F3EDE4C32F4EFA5100A075F8 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = F3EDE4C22F4EFA5100A075F8 /* JSONKit.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -682,8 +682,6 @@
 		C5B7968B2CB36F9D002414D5 /* kinormalPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kinormalPressed@2x.png"; sourceTree = "<group>"; };
 		C5B9A5F32C987A2700B9586E /* metaai.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = metaai.png; sourceTree = "<group>"; };
 		C5B9A5F42C987A2700B9586E /* metaai@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "metaai@2x.png"; sourceTree = "<group>"; };
-		C5BD18F52C5545B900A8F7ED /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
-		C5BD18F62C5545B900A8F7ED /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 		C5BD4AB32CA99E7600184E28 /* replyback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = replyback.png; sourceTree = "<group>"; };
 		C5BD4AB42CA99E7600184E28 /* replyback@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "replyback@2x.png"; sourceTree = "<group>"; };
 		C5C074152C9DC964003113CC /* ScrubberBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ScrubberBar.png; sourceTree = "<group>"; };
@@ -774,6 +772,8 @@
 		C5FACFF62CCFAACD00804003 /* JSMessageAttachView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSMessageAttachView.m; sourceTree = "<group>"; };
 		F3B9FE972F4CFDE400E1404C /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebp.a; sourceTree = "<group>"; };
 		F3B9FE992F4CFE2500E1404C /* libsharpyuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsharpyuv.a; path = WebP/libsharpyuv.a; sourceTree = "<group>"; };
+		F3EDE4C12F4EFA5100A075F8 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
+		F3EDE4C22F4EFA5100A075F8 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1116,8 +1116,8 @@
 				C503BA292C9CD5FF00073EBD /* CGL */,
 				C50685B02CC5C177007A2F71 /* NSData+Base64.h */,
 				C50685B12CC5C177007A2F71 /* NSData+Base64.m */,
-				C5BD18F52C5545B900A8F7ED /* JSONKit.h */,
-				C5BD18F62C5545B900A8F7ED /* JSONKit.m */,
+				F3EDE4C12F4EFA5100A075F8 /* JSONKit.h */,
+				F3EDE4C22F4EFA5100A075F8 /* JSONKit.m */,
 				C56D1B892C54A3C300A019A5 /* JSONUtility.h */,
 				C56D1B8A2C54A3C300A019A5 /* JSONUtility.m */,
 				C514DB8D2CC5BE5400CE3DC2 /* JSONFetcher.h */,
@@ -1729,8 +1729,8 @@
 				C525E3EF2C549FE300F2B7AB /* main.m in Sources */,
 				C525E3F32C549FE300F2B7AB /* AppDelegate.m in Sources */,
 				C56D1B8B2C54A3C300A019A5 /* JSONUtility.m in Sources */,
-				C5BD18F72C5545B900A8F7ED /* JSONKit.m in Sources */,
 				C53C760C2C56055C004C96BD /* ChatPreviewItem.m in Sources */,
+				F3EDE4C32F4EFA5100A075F8 /* JSONKit.m in Sources */,
 				C50761912C56B261006AC6DD /* WhatsAppAPI.m in Sources */,
 				C50761B82C5731A7006AC6DD /* CocoaFetch.m in Sources */,
 				C5ACF2DB2C581541006A2ED6 /* ChatsViewController.m in Sources */,

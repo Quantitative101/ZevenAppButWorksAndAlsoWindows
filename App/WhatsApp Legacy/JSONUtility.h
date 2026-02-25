@@ -11,6 +11,6 @@
 @interface JSONUtility : NSObject
 
 + (NSDictionary *)JSONParse:(NSString *)dictionary;
-+ (NSString *)JSONStringIfy:(NSDictionary *)dictionary;
++ (NSString *)JSONStringify:(NSDictionary *)dictionary;
 
 @end

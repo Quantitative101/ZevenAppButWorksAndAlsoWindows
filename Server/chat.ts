@@ -6,31 +6,24 @@ import * as os from "os";
 import * as path from "path";
 import { Client, MessageMedia } from "whatsapp-web.js";
 import { chatCache, refreshChats } from "./cache"
-import * as utils from "./utils";
 
 export function setUpListGetters(app: express.Express, client: Client) {
   app.get("/getChats", async (_, res) => {
-    const isStale = Date.now() - chatCache.lastUpdate > 15000;
-
-    if (isStale) {
+    if (chatCache.loading) {
       refreshChats(client);
+    } else {
+      await refreshChats(client);
     }
-
     res.json({
       chatList: chatCache.chatList,
       groupList: chatCache.groupList,
-      loading: chatCache.loading,
-      lastUpdate: chatCache.lastUpdate
+      loading: chatCache.loading
     });
   });
 
   app.post("/syncChat/:contactId", async (req, res) => {
     try {
-      const contactId = utils.buildContactId(
-        req.params.contactId,
-        req.query.isGroup === "1",
-      );
-      (await client.getChatById(contactId)).syncHistory();
+      (await client.getChatById(req.params.contactId)).syncHistory();
       res.status(200);
     } catch (error) {
       res.status(500).send(error.message);

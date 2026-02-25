@@ -2,12 +2,8 @@
 //  JSONUtility.m
 //  WhatsApp
 //
-//  Created by Gian Luca Russo on 26/07/24.
-//  Copyright (c) 2024 Gian Luca Russo. All rights reserved.
-//
 
 #import "JSONUtility.h"
-#import "JSONKit.h"
 
 @implementation JSONUtility
 
@@ -15,27 +11,46 @@
     if (!data) {
         NSLog(@"Input string is nil");
         return nil;
-    };
-    
-    // Convertir el string a NSDictionary usando JSONKit
-    NSDictionary *jsonObject = [data objectFromJSONString];
-    if (!jsonObject) {
-        NSLog(@"Error converting string %@ to dictionary.", data);
     }
+
+    NSData *jsonData = [data dataUsingEncoding:NSUTF8StringEncoding];
+    if (!jsonData) {
+        NSLog(@"Failed to convert string to NSData.");
+        return nil;
+    }
+
+    NSError *error = nil;
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                    options:0
+                                                      error:&error];
+
+    if (error || ![jsonObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"Error parsing JSON: %@", error);
+        return nil;
+    }
+
     return jsonObject;
 }
 
-+ (NSString *)JSONStringIfy:(NSDictionary *)dictionary {
++ (NSString *)JSONStringify:(NSDictionary *)dictionary {
     if (!dictionary) {
         NSLog(@"Input dictionary is nil");
         return nil;
-    };
-    
-    // Convertir el string a NSDictionary usando JSONKit
-    NSString *jsonString = [dictionary JSONString];
-    if (!jsonString) {
-        NSLog(@"Error converting dictionary to string.");
     }
+
+    NSError *error = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                       options:0
+                                                         error:&error];
+
+    if (!jsonData || error) {
+        NSLog(@"Error serializing JSON: %@", error);
+        return nil;
+    }
+
+    NSString *jsonString =
+        [[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] autorelease];
+
     return jsonString;
 }
 

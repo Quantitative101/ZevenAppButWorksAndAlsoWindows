@@ -52,7 +52,7 @@
     // Si hay un jsonBody, convertirlo a NSData y asignarlo al cuerpo de la solicitud
     if (jsonBody) {
         NSError *jsonError = nil;
-        NSData *bodyData = [[JSONUtility JSONStringIfy:jsonBody] dataUsingEncoding:NSUTF8StringEncoding];;
+        NSData *bodyData = [[JSONUtility JSONStringify:jsonBody] dataUsingEncoding:NSUTF8StringEncoding];;
         
         if (!jsonError) {
             [request setHTTPBody:bodyData];  // Establecer el cuerpo de la solicitud
