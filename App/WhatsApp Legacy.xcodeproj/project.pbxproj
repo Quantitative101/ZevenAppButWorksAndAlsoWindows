@@ -951,7 +951,6 @@
 			children = (
 				C5A8E28F2C5B2FB500349ACB /* JSMessagesTableViewController */,
 				C53C76012C55F4C1004C96BD /* CustomViews */,
-				C53C76092C560530004C96BD /* CustomHeadersModels */,
 				C51565242C559A210029E9AE /* VCHeadersModels */,
 				C51565232C5599930029E9AE /* VCXibs */,
 				C56D1B692C54A18300A019A5 /* Images */,
@@ -979,6 +978,7 @@
 		C53C76012C55F4C1004C96BD /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				C53C76092C560530004C96BD /* CustomHeadersModels */,
 				C5B422A72C8E2E79001A5E13 /* ChatTypes */,
 				C59A066E2CADC82900DE881D /* GIFMenu.xib */,
 				C53C76072C560149004C96BD /* ChatPreviewItem.xib */,

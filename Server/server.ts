@@ -605,17 +605,15 @@ app.post("/readChat/:contactId", async (req, res) => {
     console.log("Contact:", rawId, "isGroup:", req.query.isGroup);
     console.log("Built ID:", contactId);
 
-    try {
-      const chat = await client.getChatById(contactId);
-      console.log("Unread count:", chat.unreadCount);
+    const chat = await client.getChatById(contactId);
+    console.log("Unread count:", chat.unreadCount);
 
-      if (chat.unreadCount > 0) {
-        await chat.sendSeen();
-        console.log("Marked as seen!");
-      } else {
-        console.log("No unread messages.");
-      }
-    } catch(err) {}
+    if (chat.unreadCount > 0) {
+      await chat.sendSeen();
+      console.log("Marked as seen!");
+    } else {
+      console.log("No unread messages.");
+    }
 
     await client.resetState();
     res.status(200).json({ response: "ok" });
@@ -757,7 +755,6 @@ const socketServer = net.createServer((socket) => {
 
   // Handle socket end
   socket.on("end", async () => {
-    await client.destroy();
     socket.destroy();
     console.log("socket ended");
   });

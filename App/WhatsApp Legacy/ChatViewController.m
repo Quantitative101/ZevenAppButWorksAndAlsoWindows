@@ -241,15 +241,17 @@
     }
 }
 
-- (void)fetcherDidFinishWithJSON:(NSDictionary *)json error:(NSError *)error {
-    if(json){
-        [CocoaFetch saveDictionaryToJSON:json withFileName:[NSString stringWithFormat:@"%@-chatMessages", self.contactNumber]];
-        if([[json objectForKey:@"fromNumber"] isEqualToString:self.contactNumber]){
-            self.chatMessages = [json objectForKey:@"chatMessages"];
-            [self.tableView reloadData];
-            [self scrollToBottomAnimated:YES];
-        }
+- (void)fetcherDidFinishWithJSON:(NSArray *)json error:(NSError *)error {
+    if (json) {
+        self.chatMessages = [json mutableCopy];
+
+        [self.tableView reloadData];
+        [self scrollToBottomAnimated:YES];
+
+        NSDictionary *dict = @{@"chatMessages": self.chatMessages};
+        //[CocoaFetch saveDictionaryToJSON:dict withFileName:[NSString stringWithFormat:@"%@-chatMessages", self.contactNumber]];
     }
+
     [WhatsAppAPI sendSeenfromNumber:self.contactNumber isGroup:self.isGroup];
 }
 

@@ -184,7 +184,7 @@ alpha:1.0]
     cell.timestamp = timestamp;
     cell.unreadMessages = oUnreadCount;
     cell.isGroup = isGroup;
-    cell.contactNumber = [[dic objectForKey:@"id"] objectForKey:@"user"];
+    cell.contactNumber = [[dic objectForKey:@"id"] objectForKey:@"_serialized"];
     cell.navigationController = self.navigationController;
     cell.profileName.text = [dic objectForKey:@"name"];
     cell.profileLastHour.text = [CocoaFetch formattedDateFromTimestamp:(NSTimeInterval)timestamp];
@@ -314,7 +314,7 @@ alpha:1.0]
 
 - (void)reloadChats {
     [appDelegate.contactsViewController reloadContacts];
-    [appDelegate.newsViewController reloadNews];
+    //[appDelegate.newsViewController reloadNews];
     if (appDelegate.chatSocket.isConnected == YES && [CocoaFetch connectedToServers]){
         [WhatsAppAPI getChatListAsync];
     } else {
@@ -346,68 +346,77 @@ alpha:1.0]
     }
 }
 
-- (void)fetcherDidFinishWithJSON:(NSDictionary *)json error:(NSError *)error {
-    static NSInteger totalDownloads = 0; // static so it keeps value between calls
-    
-    if ([json objectForKey:@"chatList"]) {
-        NSLog(@"Chat list received");
+- (void)retryGetChats {
+    [WhatsAppAPI getChatListAsync];
+}
+
+- (void)fetcherDidFinishWithJSON:(id)json error:(NSError *)error {
+    static NSInteger totalDownloads = 0;
+
+    if ([json isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *dict = (NSDictionary *)json;
         
-        chatBadge = 0;
-        unreadCount = 0;
-        [CocoaFetch saveDictionaryToJSON:json withFileName:@"chatList"];
-        self.chatList = [json objectForKey:@"chatList"];
-        self.groupList = [json objectForKey:@"groupList"];
-        
-        for (NSDictionary *chatItem in self.chatList) {
-            int unreadCountI = [[chatItem objectForKey:@"unreadCount"] integerValue];
-            bool isMuted = [[chatItem objectForKey:@"muteExpiration"] integerValue] != 0;
-            if (unreadCountI > 0) chatBadge++;
-            if (!isMuted) unreadCount += unreadCountI;
+        if ([dict[@"loading"] boolValue] == YES) {
+            NSLog(@"Server still loading chats, retrying in 5 seconds...");
+
+            [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                                     selector:@selector(retryGetChats)
+                                                       object:nil];
+
+            [self performSelector:@selector(retryGetChats)
+                       withObject:nil
+                       afterDelay:5.0];
+
+            return;
         }
         
-        if (chatBadge > 0)
-            self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%ld", (long)chatBadge];
-        else
-            self.tabBarItem.badgeValue = nil;
-        
-        [UIApplication sharedApplication].applicationIconBadgeNumber = unreadCount;
-        [self.tableView reloadData];
-        
-        // Set totalDownloads when you get the chat list for the first time
-        totalDownloads = [self.chatList count];
-        
-    } else {
-        NSLog(@"Individual chat message download complete");
-        self.pendingDownloads--;
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"PendingDownloadsUpdated"
-                                                            object:nil
-                                                          userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                    [NSNumber numberWithInt:self.pendingDownloads], @"pendingDownloads",
-                                                                    [NSNumber numberWithInt:totalDownloads], @"totalDownloads",
-                                                                    nil]];
-        NSLog(@"%i", self.pendingDownloads);
-        
-        if (self.pendingDownloads == 0) {
-            NSLog(@"All messages loaded.");
-            
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"setupStage1"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            
-            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"doneSetup"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            
-            for (UIView *subview in [appDelegate.window subviews]) {
-                [subview removeFromSuperview];
+        if ([dict objectForKey:@"chatList"]) {
+            NSLog(@"Chat list received");
+
+            id chatListObj = dict[@"chatList"];
+            id groupListObj = dict[@"groupList"];
+
+            if (![chatListObj isKindOfClass:[NSArray class]]) {
+                return;
             }
-            
-            appDelegate.tabBarController.view.frame = [[UIScreen mainScreen] applicationFrame];
-            appDelegate.window.rootViewController = appDelegate.tabBarController;
-            
-            [appDelegate.window makeKeyAndVisible];
+
+            if (![groupListObj isKindOfClass:[NSArray class]]) {
+                groupListObj = @[];
+            }
+
+            self.chatList = (NSArray *)chatListObj;
+            self.groupList = (NSArray *)groupListObj;
+
+            NSInteger chatBadge = 0;
+            NSInteger unreadCount = 0;
+
+            for (id item in self.chatList) {
+
+                if (![item isKindOfClass:[NSDictionary class]]) continue;
+
+                NSDictionary *chatItem = (NSDictionary *)item;
+
+                int unreadCountI = [chatItem[@"unreadCount"] integerValue];
+                bool isMuted = [chatItem[@"muteExpiration"] integerValue] != 0;
+
+                if (unreadCountI > 0) chatBadge++;
+                if (!isMuted) unreadCount += unreadCountI;
+            }
+
+            if (chatBadge > 0)
+                self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%ld", (long)chatBadge];
+            else
+                self.tabBarItem.badgeValue = nil;
+
+            [UIApplication sharedApplication].applicationIconBadgeNumber = unreadCount;
+
+            totalDownloads = self.chatList.count;
+
+            [self.tableView reloadData];
+            return;
         }
+        
+        return;
     }
 }
 
@@ -430,9 +439,26 @@ alpha:1.0]
     
     for (NSDictionary *dic in self.chatList) {
         BOOL isGroup = [[dic objectForKey:@"isGroup"] boolValue];
-        NSString *contactNumber = [[dic objectForKey:@"id"] objectForKey:@"user"];
+        NSString *contactNumber = [[dic objectForKey:@"id"] objectForKey:@"_serialized"];
         [WhatsAppAPI fetchMessagesfromNumberAsyncFirstTime:contactNumber isGroup:isGroup light:NO delegate:self];
     }
+    
+    NSLog(@"All messages loaded.");
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"setupStage1"];
+    [defaults setObject:@"" forKey:@"doneSetup"];
+    [defaults synchronize];
+
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
+    for (UIView *subview in [appDelegate.window.subviews copy]) {
+        [subview removeFromSuperview];
+    }
+
+    appDelegate.tabBarController.view.frame = [[UIScreen mainScreen] applicationFrame];
+    appDelegate.window.rootViewController = appDelegate.tabBarController;
+    [appDelegate.window makeKeyAndVisible];
 }
 
 // Quit app after connection dialogue

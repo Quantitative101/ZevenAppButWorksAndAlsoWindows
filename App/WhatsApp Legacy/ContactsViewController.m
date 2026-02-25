@@ -193,7 +193,7 @@
 }
 
 - (void)fetcherDidFinishWithJSON:(NSDictionary *)json error:(NSError *)error {
-    if (json){
+    /*if (json){
         NSMutableArray* filteredContactList = [[NSMutableArray alloc]init];
         [CocoaFetch saveDictionaryToJSON:json withFileName:@"contactList"];
         self.contactList = [json objectForKey:@"contactList"];
@@ -205,7 +205,7 @@
         }
         self.filteredContactList = filteredContactList;
         [self.tableView reloadData];
-    }
+    }*/
 }
 
 /*

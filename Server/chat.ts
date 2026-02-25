@@ -5,19 +5,23 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import { Client, MessageMedia } from "whatsapp-web.js";
+import { chatCache, refreshChats } from "./cache"
 import * as utils from "./utils";
 
 export function setUpListGetters(app: express.Express, client: Client) {
   app.get("/getChats", async (_, res) => {
-    try {
-      const allChats = await client.getChats();
-      res.json({
-        chatList: allChats.filter((chat) => !chat.isGroup),
-        groupList: allChats.filter((chat) => chat.isGroup),
-      });
-    } catch (error) {
-      res.status(500).send("Failed to get chats: " + error.message);
+    const isStale = Date.now() - chatCache.lastUpdate > 15000;
+
+    if (isStale) {
+      refreshChats(client);
     }
+
+    res.json({
+      chatList: chatCache.chatList,
+      groupList: chatCache.groupList,
+      loading: chatCache.loading,
+      lastUpdate: chatCache.lastUpdate
+    });
   });
 
   app.post("/syncChat/:contactId", async (req, res) => {
@@ -64,11 +68,7 @@ export function setUpListGetters(app: express.Express, client: Client) {
 
   app.get("/getChatMessages/:contactId", async (req, res) => {
     try {
-      const contactId = utils.buildContactId(
-        req.params.contactId,
-        req.query.isGroup === "1",
-      );
-      const chat = await client.getChatById(contactId);
+      const chat = await client.getChatById(req.params.contactId);
       const messages = await chat.fetchMessages({
         limit: parseInt((req.query.limit as string) ?? "100"),
       });
@@ -88,8 +88,12 @@ export function setUpChatGetters(app: express.Express, client: Client) {
   app.get("/getProfileImg/:id", async (req, res) => {
     try {
       const profilePicUrl = await client.getProfilePicUrl(
-        req.params.id + "@c.us",
+        req.params.id,
       );
+      if (!profilePicUrl) {
+        return res.status(404).send("");
+      }
+      
       const response = await axios.get(profilePicUrl, {
         responseType: "arraybuffer",
       });

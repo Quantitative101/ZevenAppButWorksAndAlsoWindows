@@ -105,7 +105,7 @@
     cell.profileName.text = [[WhatsAppAPI getContactInfo:[[dic objectForKey:@"id"] objectForKey:@"user"]] objectForKey:@"name"];
     cell.totalCount = [[dic objectForKey:@"totalCount"] intValue];
     cell.unreadCount = [[dic objectForKey:@"unreadCount"] intValue];
-    cell.contactNumber = [[dic objectForKey:@"id"] objectForKey:@"user"];
+    cell.contactNumber = [[dic objectForKey:@"id"] objectForKey:@"_serialized"];
     
     NSInteger timestamp = [[dic objectForKey:@"timestamp"] intValue];
     cell.profileTimestamp.text = [CocoaFetch formattedDateHourFromTimestamp:(NSTimeInterval)timestamp];
@@ -177,7 +177,7 @@
 
 - (void)fetcherDidFinishWithJSON:(NSDictionary *)json error:(NSError *)error
 {
-    if (json)
+    /*if (json)
     {
         [CocoaFetch saveDictionaryToJSON:json withFileName:@"broadcastList"];
         self.broadcastList = [json objectForKey:@"broadcastList"];
@@ -190,7 +190,7 @@
         }
         [self.tableView reloadData];
         self.hasUnread = self._hasUnread;
-    }
+    }*/
 }
 
 - (BOOL)hasUnread

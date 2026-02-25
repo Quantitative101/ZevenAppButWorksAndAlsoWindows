@@ -51,7 +51,7 @@ NSString * const WSPMsgMediaType_toString[] = {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSDictionary *chats;
     if(appDelegate.chatSocket.isConnected == YES && [CocoaFetch connectedToServers]){
-        chats = [CocoaFetch fetchJSON:[NSString stringWithFormat:@"%@/getChats", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"]] withMethod:@"POST"];
+        chats = [CocoaFetch fetchJSON:[NSString stringWithFormat:@"%@/getChats", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"]] withMethod:@"GET"];
         [CocoaFetch saveDictionaryToJSON:chats withFileName:@"chatList"];
         return chats;
     } else {
@@ -62,14 +62,14 @@ NSString * const WSPMsgMediaType_toString[] = {
 + (void)getChatListAsync {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if(appDelegate.chatSocket.isConnected == YES && [CocoaFetch connectedToServers]){
-        [JSONFetcher fetchJSON:[NSString stringWithFormat:@"%@/getChats", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"]] withMethod:@"POST" delegate:appDelegate.chatsViewController];
+        [JSONFetcher fetchJSON:[NSString stringWithFormat:@"%@/getChats", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"]] withMethod:@"GET" delegate:appDelegate.chatsViewController];
     }
 }
 
 + (void)getBroadcastListAsync {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if(appDelegate.chatSocket.isConnected == YES && [CocoaFetch connectedToServers]){
-        [JSONFetcher fetchJSON:[NSString stringWithFormat:@"%@/getBroadcasts", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"]] withMethod:@"POST" delegate:appDelegate.newsViewController];
+        [JSONFetcher fetchJSON:[NSString stringWithFormat:@"%@/getBroadcasts", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"]] withMethod:@"GET" delegate:appDelegate.newsViewController];
     }
 }
 
@@ -77,7 +77,7 @@ NSString * const WSPMsgMediaType_toString[] = {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSDictionary *contacts;
     if(appDelegate.chatSocket.isConnected == YES && [CocoaFetch connectedToServers]){
-        contacts = [CocoaFetch fetchJSON:[NSString stringWithFormat:@"%@/getContacts", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"]] withMethod:@"POST"];
+        contacts = [CocoaFetch fetchJSON:[NSString stringWithFormat:@"%@/getContacts", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"]] withMethod:@"GET"];
         [CocoaFetch saveDictionaryToJSON:contacts withFileName:@"contactList"];
         return contacts;
     } else {
@@ -88,11 +88,11 @@ NSString * const WSPMsgMediaType_toString[] = {
 + (void)getContactListAsync {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if(appDelegate.chatSocket.isConnected == YES && [CocoaFetch connectedToServers]){
-        [JSONFetcher fetchJSON:[NSString stringWithFormat:@"%@/getContacts", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"]] withMethod:@"POST" delegate:appDelegate.contactsViewController];
+        [JSONFetcher fetchJSON:[NSString stringWithFormat:@"%@/getContacts", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"]] withMethod:@"GET" delegate:appDelegate.contactsViewController];
     }
 }
 
-+ (void)downloadAndProcessImage:(NSString *)contactNumber andIsGroup:(BOOL)isGroup {
++ (void)downloadAndProcessImage:(NSString *)contactNumber andIsGroup:(BOOL)isGroup {    
     // Generar la URL de la imagen
     NSString *imgURL;
     if(isGroup == FALSE){
@@ -127,7 +127,7 @@ NSString * const WSPMsgMediaType_toString[] = {
 + (NSDictionary *)getChatInfo:(NSString *)contactNumber {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     for(NSDictionary *chat in appDelegate.chatsViewController.chatList){
-        if ([[[chat objectForKey:@"id"] objectForKey:@"user"] isEqualToString:contactNumber]) {
+        if ([[[chat objectForKey:@"id"] objectForKey:@"_serialized"] isEqualToString:contactNumber]) {
             return chat;
         }
     }
@@ -139,9 +139,9 @@ NSString * const WSPMsgMediaType_toString[] = {
     NSLog(@"Sent seen");
     NSDictionary *messages;
     if (isGroup == true){
-        messages = [CocoaFetch fetchJSON:[NSString stringWithFormat:@"%@/getChatMessages/%@?isGroup=1&isLight=%i", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"],contactNumber, light] withMethod:@"POST"];
+        messages = [CocoaFetch fetchJSON:[NSString stringWithFormat:@"%@/getChatMessages/%@?isGroup=1&isLight=%i", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"],contactNumber, light] withMethod:@"GET"];
     } else {
-        messages = [CocoaFetch fetchJSON:[NSString stringWithFormat:@"%@/getChatMessages/%@?isLight=%i", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"],contactNumber, light] withMethod:@"POST"];
+        messages = [CocoaFetch fetchJSON:[NSString stringWithFormat:@"%@/getChatMessages/%@?isLight=%i", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"],contactNumber, light] withMethod:@"GET"];
     }
     //[CocoaFetch saveDictionaryToJSON:messages withFileName:[NSString stringWithFormat:@"%@-chatMessages", contactNumber]];
 }
@@ -151,7 +151,7 @@ NSString * const WSPMsgMediaType_toString[] = {
     [self sendSeenfromNumber:contactNumber isGroup:isGroup];
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if(appDelegate.chatSocket.isConnected == YES && [CocoaFetch connectedToServers]){
-        [JSONFetcher fetchJSON:[NSString stringWithFormat:@"%@/getChatMessages/%@?isGroup=%i&isLight=0", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"],contactNumber, (isGroup == true ? 1 : 0)] withMethod:@"POST" delegate:(light == YES ? nil: appDelegate.chatViewController)];
+        [JSONFetcher fetchJSON:[NSString stringWithFormat:@"%@/getChatMessages/%@?isGroup=%i&isLight=0", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"],contactNumber, (isGroup == true ? 1 : 0)] withMethod:@"GET" delegate:(light == YES ? nil: appDelegate.chatViewController)];
     }
 }
 
@@ -162,7 +162,7 @@ NSString * const WSPMsgMediaType_toString[] = {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if(appDelegate.chatSocket.isConnected == YES && [CocoaFetch connectedToServers]){
         id retainedDelegate = [delegate retain]; // retain the delegate
-        [JSONFetcher fetchJSON:[NSString stringWithFormat:@"%@/getChatMessages/%@?isGroup=%i&isLight=0", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"], contactNumber, (isGroup ? 1 : 0)] withMethod:@"POST" delegate:retainedDelegate];
+        [JSONFetcher fetchJSON:[NSString stringWithFormat:@"%@/getChatMessages/%@?isGroup=%i&isLight=0", [[NSUserDefaults standardUserDefaults] stringForKey:@"wspl-b-address"], contactNumber, (isGroup ? 1 : 0)] withMethod:@"GET" delegate:retainedDelegate];
     }
 }
 
@@ -270,7 +270,7 @@ NSString * const WSPMsgMediaType_toString[] = {
 + (NSDictionary *)getGroupInfo:(NSString *)groupNumber {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     for(NSDictionary *group in appDelegate.chatsViewController.groupList){
-        if ([[[group objectForKey:@"id"] objectForKey:@"user"] isEqualToString:groupNumber]) {
+        if ([[[group objectForKey:@"id"] objectForKey:@"_serialized"] isEqualToString:groupNumber]) {
             return group;
         }
     }

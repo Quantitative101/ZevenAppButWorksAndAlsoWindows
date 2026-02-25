@@ -303,7 +303,7 @@
     self.chatViewController.title = [dic objectForKey:@"name"];
     
     
-    self.chatViewController.contactNumber = (fromContact == YES ? [dic objectForKey:@"number"] : [[dic objectForKey:@"id"] objectForKey:@"user"]);
+    self.chatViewController.contactNumber = (fromContact == YES ? [dic objectForKey:@"number"] : [[dic objectForKey:@"id"] objectForKey:@"_serialized"]);
     self.chatViewController.isGroup = (fromContact == NO ? [[dic objectForKey:@"isGroup"] boolValue] : false);
     self.chatViewController.isReadOnly = [[dic objectForKey:@"isReadOnly"] boolValue];
     self.chatViewController.timestamp = (fromContact == NO ? [[dic objectForKey:@"timestamp"] integerValue] : 0);
