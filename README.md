@@ -10,10 +10,6 @@ Use **WhatsApp** on your old iOS 7+ device
 ## Usage
 This section is split in two parts: the **app** and the **companion server**
 
-#### App
-- Get the latest build from the releases section on this repository or compile it yourself from source
-- Install it on your iDevice
-
 #### Server
 ZevenApp requires you to host your own server because of the way it interfaces with WhatsApp. We cannot directly contact the WhatsApp servers from the app, and as such it needs a "middleman". You can either selfhost it at home, or get a cheap server to do it on.<br>
 <sub>*No, it is most likely not possible to remove this requirement. Please do not ask about it.*</sub>
@@ -28,6 +24,15 @@ ZevenApp requires you to host your own server because of the way it interfaces w
 - Create `bin` folder in the folder that has the newly made executable
 - Move the `ffmpeg` binary and its dependencies from the previously downloaded archive into that `bin` folder
 - Run `server` and profit.
+
+#### App
+The app is fairly easy to get running as long as you properly set up the server with the instructions above.
+
+#### Guide
+- Get the latest build from the releases section on this repository or compile it yourself from source
+- Install it on your iDevice
+- Set your server IP address/domain on the setup screen and scan the QR code to link your WhatsApp account
+- Keep your device open and wait for the chats to load
 
 ## Developers
 <table style="border-collapse: separate; border-spacing: 0 10px;">
