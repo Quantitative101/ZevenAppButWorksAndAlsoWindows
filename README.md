@@ -8,13 +8,13 @@ Use **WhatsApp** on your old iOS 7+ device
 </div>
 
 ## Usage
-This section is split in two parts: the app and the companion server
+This section is split in two parts: the **app** and the **companion server**
 
-### App
+#### App
 - Get the latest build from the releases section on this repository or compile it yourself from source
 - Install it on your iDevice
 
-### Server
+#### Server
 ZevenApp requires you to host your own server because of the way it interfaces with WhatsApp. We cannot directly contact the WhatsApp servers from the app, and as such it needs a "middleman". You can either selfhost it at home, or get a cheap server to do it on.<br>
 <sub>*No, it is most likely not possible to remove this requirement. Please do not ask about it.*</sub>
 
