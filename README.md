@@ -8,6 +8,7 @@ Use **WhatsApp** on your old iOS 7+ device
 </div>
 
 Disclaimer: I didn't do much, 95% of the code was forked from SevenApp, which is a fork of WhatsappX. I just adapted the server part to run on Windows instead of macOS, and also fixed the QR code thing. Oh, and also the server part is compiled now I think. And yeah, vibecoded 90% of my part too.
+Don't forget to change the path thing to your Windows account name.
 
 ## Usage
 This section is split in two parts: the **app** and the **companion server**
