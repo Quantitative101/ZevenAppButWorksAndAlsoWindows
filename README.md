@@ -1,11 +1,13 @@
 <div align="center">
 <img src="App/WhatsApp%20Legacy/Images/logo_large.png" width=20% height=20%>
-<h1>ZevenApp</h1>
+<h1>ZevenApp but I fixed it (barely)</h1>
 
 Use **WhatsApp** on your old iOS 7+ device
 <p><em>"Zeven" means "seven" in Flemish</em></p>
 
 </div>
+
+Disclaimer: I didn't do much, 95% of the code was forked from SevenApp, which is a fork of WhatsappX. I just adapted the server part to run on Windows instead of macOS, and also fixed the QR code thing. Oh, and also the server part is compiled now I think. And yeah, vibecoded 90% of my part too.
 
 ## Usage
 This section is split in two parts: the **app** and the **companion server**
@@ -44,7 +46,7 @@ The app is fairly easy to get running as long as you properly set up the server 
       murdle
     </td>
     <td style="vertical-align: middle; padding-left: 12px; font-size: 16px;">
-      Ported the application to iOS 7 and fixed up everything that the original developers left broken (aka most of the app)
+      Ported the application to iOS 7 and fixed up everything that the original developers left broken (aka most of the app), and now also made it work on Windows and fixed up the QR code stuff.
     </td>
   </tr>
   <tr>
@@ -80,7 +82,7 @@ The app is fairly easy to get running as long as you properly set up the server 
 - **Skal**: for the `WebP` framework
 
 ## Disclaimers
-This project is **not affiliated** with “WA for Legacy iOS” by Alwin Lubbers, “Meta Platforms Inc.”, or “WhatsApp Inc.”
+This project is **not affiliated** with “WA for Legacy iOS” by Alwin Lubbers, “Meta Platforms Inc.”, or “WhatsApp Inc.” Or SevenApp, I barely modified it.
 
 This is an **unofficial client** for WhatsApp and is **not affiliated with**, **endorsed by**, or **supported** by WhatsApp Inc. in any way.
 By using this application, you acknowledge and agree that:
